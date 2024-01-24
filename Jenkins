@@ -1,21 +1,43 @@
 pipeline {
-    agent any
+
+    agent {
+
+        label 'linux'
+
+    }
  
     stages {
-        stage('Build') {
+
+        stage('Get Agent Details and Docker Version') {
+
             steps {
-                echo 'Building Example'
+
+                script {
+
+                    // Get agent details
+
+                    def agentHostname = currentBuild.agent.host
+
+                    def agentLabel = currentBuild.agent.labelString
+ 
+                    // Get Docker version
+
+                    def dockerVersion = sh(script: 'docker --version | awk \'{print $3}\'', returnStdout: true).trim()
+ 
+                    // Print agent details
+
+                    echo "Agent Hostname: ${agentHostname}"
+
+                    echo "Agent Label: ${agentLabel}"
+
+                    echo "Docker Version: ${dockerVersion}"
+
+                }
+
             }
+
         }
-        stage('Test') {
-            steps {
-                echo 'Testing Example'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying Example'
-            }
-        }
+
     }
+
 }
